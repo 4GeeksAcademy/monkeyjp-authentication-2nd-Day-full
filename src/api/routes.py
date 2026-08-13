@@ -54,19 +54,19 @@ def login():
     password = data.get("password")
 
     if not email or not password:
-        return jsonify({"msg": "Email and password are required"}), 400
+        return jsonify({"error": "Email and password are required"}), 400
 
     user = db.session.execute(db.select(User).where(
         User.email == email)).scalar_one_or_none()
 
     if user is None:
-        return jsonify({"msg": "Invalid email or password"}), 401
+        return jsonify({"error": "Invalid email or password"}), 401
 
     if user.check_password(password):
         access_token = create_access_token(identity=str(user.id))
         return jsonify({"msg": "Login successful", "token": access_token}), 200
     else:
-        return jsonify({"msg": "Invalid email or password"}), 401
+        return jsonify({"error": "Invalid email or password"}), 401
 
 
 @api.route('/profile', methods=["GET"])
@@ -76,6 +76,6 @@ def get_profile():
     user = db.session.get(User, int(user_id))
 
     if not user:
-        return jsonify({"msg": "User not found"}), 404
+        return jsonify({"error": "User not found"}), 404
 
     return jsonify(user.serialize()), 200

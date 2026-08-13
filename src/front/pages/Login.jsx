@@ -21,7 +21,7 @@ export const Login = () => {
 		const { ok, data } = await login(email, password);
 
 		if (!ok) {
-			setError(data.msg);
+			setError(data.error);
 			return;
 		}
 
